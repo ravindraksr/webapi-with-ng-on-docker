@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>Awaoa.Samples.WebApiWithNgOnDocker</RootNamespace>
+    <AssemblyName>$(RootNamespace)</AssemblyName>
+    <UserSecretsId>ec2d3264-6f3b-4f0b-8b89-4dd97ebb6264</UserSecretsId>
+  </PropertyGroup>
+
+</Project>

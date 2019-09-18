@@ -1,0 +1,18 @@
+version: '3.7'
+
+services: 
+  webapp.service:
+    image: "${REGISTRY:-awoaoa}/samples:${VERSION:-latest}-webapp"
+    build: 
+      context: .
+      dockerfile: src/Webapp/Dockerfile
+    ports: 
+      - 80:80
+    links: 
+      - "webapi.service:backend"
+
+  webapi.service:
+    image: "${REGISTRY:-awoaoa}/samples:${VERSION:-latest}-backend"
+    build: 
+      context: .
+      dockerfile: src/WebApi/Dockerfile
