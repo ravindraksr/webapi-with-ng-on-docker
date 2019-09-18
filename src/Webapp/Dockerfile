@@ -1,17 +1,19 @@
 FROM nginx:alpine AS base
-WORKDIR /wwwroot
+COPY src/Webapp/_nginx/default.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
 EXPOSE 80
 
-FROM node:alpine AS stage
-RUN npm i -g yarn
-WORKDIR /source
+FROM node:alpine AS build
+WORKDIR /src
 COPY src/Webapp/package.json .
+RUN npm i -g yarn
 RUN yarn
 
-FROM stage AS build
-COPY src/Webapp .
+FROM build AS publish
+WORKDIR /src
+COPY src/src .
 RUN npm run build
 
 FROM base AS final
-COPY --from=build /source/dist .
-COPY --from=build /source/_nginx/default.conf /etc/nginx/conf.d/default.conf
+WORKDIR /app
+COPY --from=publish /src/dist .

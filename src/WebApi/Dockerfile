@@ -2,16 +2,19 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS stage
-WORKDIR /source
-COPY src/WebApi/WebApiWithNgOnDocker.csproj .
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build
+WORKDIR /src
+COPY ["src/WebApi/WebApiWithNgOnDocker.csproj", "src/WebApi"]
+RUN dotnet restore "src/WebApi/WebApiWithNgOnDocker.csproj"
 
-FROM stage AS build
-COPY /src/WebApi .
-RUN dotnet build --configuration Release --runtime linux-musl-x64
-RUN dotnet publish --configuration Release --runtime linux-musl-x64 --output artifacts
+COPY . .
+WORKDIR /src/src/WebApi
+RUN dotnet build --configuration Release --runtime linux-musl-x64 --output /app
+
+FROM build AS publish
+RUN dotnet publish --configuration Release --runtime linux-musl-x64 --output /app
 
 FROM base AS final
-COPY --from=build /source/artifacts /app
+WORKDIR /app
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Awaoa.Samples.WebApiWithNgOnDocker.dll"]

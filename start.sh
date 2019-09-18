@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose -p awaoa-samples up
+docker-compose -f docker-compose.yml -p awaoa-samples up
