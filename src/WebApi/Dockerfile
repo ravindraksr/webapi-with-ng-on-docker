@@ -4,14 +4,15 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-alpine AS build
 WORKDIR /src
-COPY ["src/WebApi/WebApiWithNgOnDocker.csproj", "src/WebApi"]
-RUN dotnet restore "src/WebApi/WebApiWithNgOnDocker.csproj"
+COPY src/WebApi/WebApiWithNgOnDocker.csproj .
+RUN dotnet restore
 
-COPY . .
-WORKDIR /src/src/WebApi
+COPY src/WebApi ./WebApi
+WORKDIR /src/WebApi
 RUN dotnet build --configuration Release --runtime linux-musl-x64 --output /app
 
 FROM build AS publish
+WORKDIR /src/WebApi
 RUN dotnet publish --configuration Release --runtime linux-musl-x64 --output /app
 
 FROM base AS final

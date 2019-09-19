@@ -11,7 +11,7 @@ RUN yarn
 
 FROM build AS publish
 WORKDIR /src
-COPY src/src .
+COPY src/Webapp .
 RUN npm run build
 
 FROM base AS final
